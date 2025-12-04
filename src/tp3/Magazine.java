@@ -31,20 +31,14 @@ class Magazine extends Article {
     public double calculerPrix() {
         LocalDate now = LocalDate.now();
         long duree = 0;
-        int seuil1 = 0, seuil2 = 0;
+        int seuil1 = 2, seuil2 = 4;
         
         if (periodicite.equals("hebdomadaire")) {
             duree = datePublication.until(now, java.time.temporal.ChronoUnit.WEEKS);
-            seuil1 = 2;
-            seuil2 = 4;
         } else if (periodicite.equals("mensuel")) {
             duree = datePublication.until(now, java.time.temporal.ChronoUnit.MONTHS);
-            seuil1 = 2;
-            seuil2 = 4;
         } else if (periodicite.equals("trimestriel")) {
             duree = datePublication.until(now, java.time.temporal.ChronoUnit.MONTHS) / 3;
-            seuil1 = 2;
-            seuil2 = 4;
         }
         
         if (duree >= seuil2) {
