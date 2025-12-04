@@ -16,7 +16,8 @@ public class Livre extends Article {
     protected String isbn;
     protected int nbPages;
     
-    public Livre(String description, double prixInitial, int nombreExemplaires, String isbn, int nombrePages) {
+    public Livre(String description, double prixInitial, int nombreExemplaires,
+                 String isbn, int nombrePages) {
         super(description, prixInitial, nombreExemplaires);
         this.isbn = isbn;
         this.nbPages = nombrePages;
@@ -54,6 +55,8 @@ public class Livre extends Article {
     
     @Override
     public String toString() {
-        return super.toString() + "\nNombre pages : " + this.nbPages;
+        return super.toString()
+             + "\nISBN : " + this.isbn
+             + "\nNombre pages : " + this.nbPages;
     }
 }
