@@ -9,7 +9,6 @@ package tp3;
  * @author billy
  */
 public class Manuel extends Livre {
-    protected String isbn;
     protected String matiere;
     protected String niveauScolaire;
     
