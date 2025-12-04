@@ -14,7 +14,11 @@ public abstract class Article {
     protected double prixInitial;
     protected int nbExemplaires;
     
-    public Article(String description, double prixInitial, int nbExemplaires) { ... }
+    public Article(String description, double prixInitial, int nbExemplaires) {
+        this.description = description;
+        this.prixInitial = prixInitial;
+        this.nbExemplaires = nbExemplaires;
+    }
         
     public abstract String getNumero();
     
@@ -35,5 +39,10 @@ public abstract class Article {
     }
     
     @Override
-    public String toString() { ... }
+    public String toString() {
+        return "Description : " + this.description
+             + "\nPrix : " + this.calculerPrix()
+             + "\nExemplaires : " + this.nbExemplaires;
+    }
 }
+   
