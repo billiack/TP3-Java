@@ -14,15 +14,9 @@ public abstract class Article {
     protected double prixInitial;
     protected int nbExemplaires;
     
-    public Article(String description, double prixInitial, int nbExemplaires) {
-        this.description = description;
-        this.prixInitial = prixInitial;
-        this.nbExemplaires = nbExemplaires;
-    }
+    public Article(String description, double prixInitial, int nbExemplaires) { ... }
         
-    public String getNumero() {
-        return "";
-    }
+    public abstract String getNumero();
     
     public boolean placerApres(Article autre) {
         return this.getNumero().compareTo(autre.getNumero()) > 0;
@@ -41,7 +35,5 @@ public abstract class Article {
     }
     
     @Override
-    public String toString() {
-        return "Description : " + this.description + "\nPrix : " + this.calculerPrix() + "\nExemplaires : " + this.nbExemplaires;
-    }
+    public String toString() { ... }
 }
