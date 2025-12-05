@@ -49,7 +49,7 @@ public class BonDepot {
     }
 
     public String versFichier() {
-        String ch = this.numero + System.lineSeparator();
+        String ch = this.numeroTel + System.lineSeparator();
         ch += this.numeroTel + " : " + this.dateDepot + " : " + this.nbArticles + System.lineSeparator();
         for (int i = 0; i < this.nbArticles; i++) {
             ch += this.articles[i].versFichier();
