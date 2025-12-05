@@ -128,6 +128,16 @@ public class Etablissement {
         return null;
     }
 
+    public void ajouterBonDepot(BonDepot bon) {
+        for (int i = 0; i < MAX; i++) {
+            if (bonsDepots[i] == null) {
+                bonsDepots[i] = bon;
+                return;
+            }
+        }
+        System.out.println("Impossible d'ajouter un bon de dépôt : capacité maximale atteinte.");
+    }
+
     public void lister() {
         Article[] sortedArticles = new Article[MAX];
         sortedArticles = articles.clone();
@@ -183,7 +193,45 @@ public class Etablissement {
         }
     }
 
+    public void versFichierDepots() throws IOException {
+        String ch = "";
+        for (int i = 0; i < MAX; i++) {
+            if (bonsDepots[i] != null) {
+                ch += bonsDepots[i].versFichier();
+            }
+        }
+        FileWriter fich = new FileWriter("depots/depots_" + this.nom + ".txt");
+        fich.write(ch);
+        fich.close();
+    }
 
+    public Etablissement depuisFichierDepots(String nomFichier) throws IOException {
+        FileReader fich = new FileReader(nomFichier);
+        BufferedReader br = new BufferedReader(fich);
+        String ligne;
+        Etablissement etab = new Etablissement(this.nom);
+        while ((ligne = br.readLine()) != null) {
+            int bonId = Integer.parseInt(ligne.trim());
+            ligne = br.readLine();
+            String[] parts = ligne.split(" : ");
+            String numeroTel = parts[0].trim();
+            LocalDate dateDepot = LocalDate.parse(parts[1].trim());
+            int nbArticles = Integer.parseInt(parts[2].trim());
+            BonDepot bon = new BonDepot(numeroTel, nbArticles);
+            bon.id = bonId;
+            bon.dateDepot = dateDepot;
+            for (int i = 0; i < nbArticles; i++) {
+                ligne = br.readLine();
+                String[] artParts = ligne.split(" : ");
+                int quantite = Integer.parseInt(artParts[0].trim());
+                String reference = artParts[1].trim();
+                bon.ajouterLigne(reference, quantite);
+            }
+            etab.ajouterBonDepot(bon);
+        }
+        br.close();
+        return etab;
+    }
 
     @Override
     public String toString() {
