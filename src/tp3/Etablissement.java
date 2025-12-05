@@ -1,5 +1,9 @@
 package tp3;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
 
 public class Etablissement {
@@ -139,12 +143,12 @@ public class Etablissement {
     }
 
     public void lister() {
-        Article[] sortedArticles = new Article[MAX];
+        Article[] sortedArticles;
         sortedArticles = articles.clone();
         for (int i = 0; i < MAX - 1; i++) {
             for (int j = 0; j < MAX - i - 1; j++) {
                 if (sortedArticles[j] != null && sortedArticles[j + 1] != null &&
-                    sortedArticles[j].getNbExemplaires() > sortedArticles[j + 1].getNbExemplaires()) {
+                    sortedArticles[j].nbExemplaires > sortedArticles[j + 1].nbExemplaires) {
 
                     Article temp = sortedArticles[j];
                     sortedArticles[j] = sortedArticles[j + 1];
@@ -154,31 +158,31 @@ public class Etablissement {
         }
         for (int i = 0; i < MAX; i++) {
             if (sortedArticles[i] != null) {
-                System.out.println(sortedArticles[i].toString() + " - Prix courant : " + sortedArticles[i].getPrixCourant());
+                System.out.println(sortedArticles[i].toString() + " - Prix courant : " + sortedArticles[i].calculerPrix());
             }
         }
+    }
 
-        // Optionnel
-        public void lister(String numeroTel) {
-            BonDepot[] filteredBons = new BonDepot[MAX];
-            int count = 0;
-            for (int i = 0; i < MAX; i++) {
-                if (bonsDepots[i] != null && bonsDepots[i].getNumeroTel().equals(numeroTel)) {
-                    filteredBons[count++] = bonsDepots[i];
+    // Optionnel
+    public void lister(String numeroTel) {
+        BonDepot[] filteredBons = new BonDepot[MAX];
+        int count = 0;
+        for (int i = 0; i < MAX; i++) {
+            if (bonsDepots[i] != null && bonsDepots[i].getNumeroTel().equals(numeroTel)) {
+                filteredBons[count++] = bonsDepots[i];
+            }
+        }
+        for (int i = 0; i < count - 1; i++) {
+            for (int j = 0; j < count - i - 1; j++) {
+                if (filteredBons[j].dateDepot.isAfter(filteredBons[j + 1].dateDepot)) {
+                    BonDepot temp = filteredBons[j];
+                    filteredBons[j] = filteredBons[j + 1];
+                    filteredBons[j + 1] = temp;
                 }
             }
-            for (int i = 0; i < count - 1; i++) {
-                for (int j = 0; j < count - i - 1; j++) {
-                    if (filteredBons[j].getDateCreation().isAfter(filteredBons[j + 1].getDateCreation())) {
-                        BonDepot temp = filteredBons[j];
-                        filteredBons[j] = filteredBons[j + 1];
-                        filteredBons[j + 1] = temp;
-                    }
-                }
-            }
-            for (int i = 0; i < count; i++) {
-                System.out.println(filteredBons[i].toString());
-            }
+        }
+        for (int i = 0; i < count; i++) {
+            System.out.println(filteredBons[i].toString());
         }
     }
 
@@ -186,8 +190,8 @@ public class Etablissement {
     void lister(String numero, LocalDate debut, LocalDate fin) {
         for (int i = 0; i < MAX; i++) {
             if (bonsDepots[i] != null && bonsDepots[i].getNumeroTel().equals(numero) &&
-                (bonsDepots[i].getDateCreation().isEqual(debut) || bonsDepots[i].getDateCreation().isAfter(debut)) &&
-                (bonsDepots[i].getDateCreation().isEqual(fin) || bonsDepots[i].getDateCreation().isBefore(fin))) {
+                (bonsDepots[i].dateDepot.isEqual(debut) || bonsDepots[i].dateDepot.isAfter(debut)) &&
+                (bonsDepots[i].dateDepot.isEqual(fin) || bonsDepots[i].dateDepot.isBefore(fin))) {
                 System.out.println(bonsDepots[i].toString());
             }
         }
