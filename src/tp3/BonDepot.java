@@ -48,6 +48,15 @@ public class BonDepot {
         return articles;
     }
 
+    public String versFichier() {
+        String ch = this.numeroTel + System.lineSeparator();
+        ch += this.numeroTel + " : " + this.dateDepot + " : " + this.nbArticles + System.lineSeparator();
+        for (int i = 0; i < this.nbArticles; i++) {
+            ch += this.articles[i].versFichier();
+        }
+        return ch;
+    }
+
     @Override
     public String toString() {
         String out = "BonDepot n°" + id +

@@ -9,6 +9,10 @@ public class LigneDepot {
         this.quantite = quantite;
     }
 
+    public String versFichier() {
+        return this.numero + " : " + this.quantite + System.lineSeparator();
+    }
+
     @Override
     public String toString() {
         return "LigneDepot : " +

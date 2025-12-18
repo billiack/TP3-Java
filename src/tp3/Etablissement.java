@@ -1,5 +1,9 @@
 package tp3;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
 
 public class Etablissement {
@@ -126,6 +130,111 @@ public class Etablissement {
         }
         System.out.println("Impossible d'ajouter un bon de dépôt : capacité maximale atteinte.");
         return null;
+    }
+
+    public void ajouterBonDepot(BonDepot bon) {
+        for (int i = 0; i < MAX; i++) {
+            if (bonsDepots[i] == null) {
+                bonsDepots[i] = bon;
+                return;
+            }
+        }
+        System.out.println("Impossible d'ajouter un bon de dépôt : capacité maximale atteinte.");
+    }
+
+    public void lister() {
+        Article[] sortedArticles;
+        sortedArticles = articles.clone();
+        for (int i = 0; i < MAX - 1; i++) {
+            for (int j = 0; j < MAX - i - 1; j++) {
+                if (sortedArticles[j] != null && sortedArticles[j + 1] != null &&
+                    sortedArticles[j].nbExemplaires > sortedArticles[j + 1].nbExemplaires) {
+
+                    Article temp = sortedArticles[j];
+                    sortedArticles[j] = sortedArticles[j + 1];
+                    sortedArticles[j + 1] = temp;
+                }
+            }
+        }
+        for (int i = 0; i < MAX; i++) {
+            if (sortedArticles[i] != null) {
+                System.out.println(sortedArticles[i].toString() + " - Prix courant : " + sortedArticles[i].calculerPrix());
+            }
+        }
+    }
+
+    // Optionnel
+    public void lister(String numeroTel) {
+        BonDepot[] filteredBons = new BonDepot[MAX];
+        int count = 0;
+        for (int i = 0; i < MAX; i++) {
+            if (bonsDepots[i] != null && bonsDepots[i].getNumeroTel().equals(numeroTel)) {
+                filteredBons[count++] = bonsDepots[i];
+            }
+        }
+        for (int i = 0; i < count - 1; i++) {
+            for (int j = 0; j < count - i - 1; j++) {
+                if (filteredBons[j].dateDepot.isAfter(filteredBons[j + 1].dateDepot)) {
+                    BonDepot temp = filteredBons[j];
+                    filteredBons[j] = filteredBons[j + 1];
+                    filteredBons[j + 1] = temp;
+                }
+            }
+        }
+        for (int i = 0; i < count; i++) {
+            System.out.println(filteredBons[i].toString());
+        }
+    }
+
+    // Optionnel
+    void lister(String numero, LocalDate debut, LocalDate fin) {
+        for (int i = 0; i < MAX; i++) {
+            if (bonsDepots[i] != null && bonsDepots[i].getNumeroTel().equals(numero) &&
+                (bonsDepots[i].dateDepot.isEqual(debut) || bonsDepots[i].dateDepot.isAfter(debut)) &&
+                (bonsDepots[i].dateDepot.isEqual(fin) || bonsDepots[i].dateDepot.isBefore(fin))) {
+                System.out.println(bonsDepots[i].toString());
+            }
+        }
+    }
+
+    public void versFichierDepots() throws IOException {
+        String ch = "";
+        for (int i = 0; i < MAX; i++) {
+            if (bonsDepots[i] != null) {
+                ch += bonsDepots[i].versFichier();
+            }
+        }
+        FileWriter fich = new FileWriter("depots/depots_" + this.nom + ".txt");
+        fich.write(ch);
+        fich.close();
+    }
+
+    public Etablissement depuisFichierDepots(String nomFichier) throws IOException {
+        FileReader fich = new FileReader(nomFichier);
+        BufferedReader br = new BufferedReader(fich);
+        String ligne;
+        Etablissement etab = new Etablissement(this.nom);
+        while ((ligne = br.readLine()) != null) {
+            int bonId = Integer.parseInt(ligne.trim());
+            ligne = br.readLine();
+            String[] parts = ligne.split(" : ");
+            String numeroTel = parts[0].trim();
+            LocalDate dateDepot = LocalDate.parse(parts[1].trim());
+            int nbArticles = Integer.parseInt(parts[2].trim());
+            BonDepot bon = new BonDepot(numeroTel, nbArticles);
+            bon.id = bonId;
+            bon.dateDepot = dateDepot;
+            for (int i = 0; i < nbArticles; i++) {
+                ligne = br.readLine();
+                String[] artParts = ligne.split(" : ");
+                int quantite = Integer.parseInt(artParts[0].trim());
+                String reference = artParts[1].trim();
+                bon.ajouterLigne(reference, quantite);
+            }
+            etab.ajouterBonDepot(bon);
+        }
+        br.close();
+        return etab;
     }
 
     @Override
